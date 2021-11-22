@@ -1,0 +1,51 @@
+.activity {
+  &__card {
+    border-radius: 38px 38px 0px 38px !important;
+    margin-bottom: 1.9375rem !important;
+    background-color: #5e2e53 !important;
+  }
+
+  &__list {
+    -ms-overflow-style: none !important;
+    /* IE and Edge */
+    scrollbar-width: none !important;
+    /* Firefox */
+    max-height: 685px !important;
+    z-index: 0 !important;
+
+    &::-webkit-scrollbar {
+      display: none !important;
+    }
+  }
+}
+
+@media screen and (max-width: 428px) {
+  .activity {
+    &__card {
+      margin: 0 auto;
+      width: 82vw;
+    }
+    &__list {
+      height: 100% !important;
+      max-height: 712px !important;
+      z-index: 0;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+    }
+  }
+}
+
+@media screen and (max-height: 667px) {
+  .activity {
+    &__list {
+      height: 100% !important;
+      max-height: 530px !important;
+      /* Firefox */
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+    }
+  }
+}

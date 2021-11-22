@@ -1,0 +1,70 @@
+.form {
+  margin-top: 29vh;
+
+  &__username {
+    width: 330px;
+    height: 50px;
+    font-size: 16px;
+    background: #eaeaea;
+    margin-bottom: 0.9375rem;
+    border: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 12px;
+    border-radius: 3px;
+  }
+
+  &__password {
+    width: 330px;
+    height: 50px;
+    font-size: 16px;
+    background: #eaeaea;
+    margin-bottom: 0.9375rem;
+    border: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 12px;
+    border-radius: 3px;
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    width: 106px;
+    padding: 0.45rem;
+    margin-bottom: 1.875rem;
+    vertical-align: center;
+    border-radius: 12px;
+    border: 1px solid #30172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+    background-color: #5e2e53;
+    color: rgb(255, 255, 255);
+  }
+}
+
+.form input[type="checkbox"] {
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+  appearance: checkbox;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@media screen and (max-width: 320px) {
+  .form__text {
+    font-size: 15px;
+  }
+
+  .form__username,
+  .form__password {
+    width: 88vw;
+  }
+}
