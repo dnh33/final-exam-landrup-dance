@@ -124,7 +124,7 @@ const response = await axios.get(
 
 ### Hide bottom navigation based on URL + Ternary operators for Routing and hide/show
 
-In App.js I have used a <LocationProvider> to give components access to URL parameters through Reach Router.
+In App.js I have used a LocationProvider to give components access to URL parameters through Reach Router.
 
 A ternary operator is used in Line 13 to switch between two components. In this case the two calendars.
 
@@ -168,7 +168,7 @@ We can then pass the context through the component as a Prop:
 export default function BottomNavbar({ context })
 ```
 
-And write a ternary operator in Line 29 which return nothing if the URL is "/" and <BottomNavigation> on any other page if the URL is anything else:
+And write a ternary operator in Line 29 which return nothing if the URL is "/" and BottomNavigation on any other page if the URL is anything else:
 
 ```react
  return context.location.pathname === "/" ? null : (
