@@ -10,7 +10,6 @@ The sub-tasks have been completed: cookies + deployment automation
 
 The app is a SPA that was bootstrapped with create-react app and does not make use of any React frameworks.
 
-Find an optimized build on Netlify: NOTE: This requires a locally running API.
 
 ## Tech stack
 
