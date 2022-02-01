@@ -1,16 +1,16 @@
-# Eksamen 2021 | Landrup Dans
+# Exam 2021 | Landrup Dans
 
-## Beskrivelse
+## Description
 
-Dette projekt har bestået af at man skulle kode en mobil app for danse skolen Landrup Dans.
+This project has consisted of coding a mobile app for the dance school, Landrup Dans.
 
-De har skulle bruge en app til at kunne give brugere en nem måde at skrive sig op til hold, og for instruktører at kunne se tilmeldte hold, og hold deltagere.
+They have had to use an app to be able to give users an easy way to sign up for teams and for instructors to be able to see registered teams and team participants.
 
-Der er fuldført delopgaverne: cookies + automatiseret deployment
+The sub-tasks have been completed: cookies + deployment automation
 
-Appen er en SPA, og bootstrapped med create-react-app, og bruger ingen React frameworks.
+The app is a SPA that was bootstrapped with create-react app and does not make use of any React frameworks.
 
-Find optimeret build på [Netlify](https://landrupdans.netlify.app/) :OBS: Kræver API kører lokalt.
+Find an optimized build on Netlify: NOTE: This requires a locally running API.
 
 ## Tech stack
 
@@ -93,7 +93,7 @@ Benefits:
 - Theming using React’s Context API
 - Consistency through no clashing with CSS selectors
 
-## Kode eksempler
+## Code examples
 
 ### Cookies
 
