@@ -142,12 +142,14 @@ App.js
             <Login default path="login" />
             <ClassDetails path="aktivitet/:id" context={context} />
             <TeamDetails path="hold/:id" />
+
             {/* If user role is instructor, show specific calendar otherwise user calendar */}
             {token?.role === "instructor" ? (
               <InstructorCalendar path="/kalender" />
             ) : (
               <UserCalendar path="/kalender" />
             )}
+
           </Router>
 
           <Paper
