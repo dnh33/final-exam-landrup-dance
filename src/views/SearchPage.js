@@ -1,26 +1,18 @@
 import React from "react";
 import Searchbox from "../components/search/Searchbox";
+import PageTitle from "../components/text/PageTitle";
 import styled from "styled-components";
 
 const Container = styled.div`
   padding: 20px;
   min-height: 100vh;
-  background: #5e2e53;
-`;
-
-const PageTitle = styled.h1`
-  margin: 0 0 2rem 0;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 2.25rem;
-  font-weight: 500;
-  color: #eaeaea;
-  text-transform: capitalize;
+  background: linear-gradient(135deg, #5e2e53 0%, #482640 100%);
 `;
 
 export default function SearchPage() {
   return (
     <Container>
-      <PageTitle>Søg</PageTitle>
+      <PageTitle icon="🔍">Søg</PageTitle>
       <Searchbox />
     </Container>
   );

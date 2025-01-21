@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import styled from "styled-components";
 import { activities } from "../data/mockData";
 import { Pie } from "react-chartjs-2";
+import PageTitle from "../components/text/PageTitle";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -17,23 +18,6 @@ const Container = styled.div`
   padding: 20px;
   min-height: 100vh;
   background: linear-gradient(135deg, #5e2e53 0%, #482640 100%);
-`;
-
-const PageTitle = styled.h1`
-  margin: 0 0 2rem 0;
-  font-family: "Ubuntu", sans-serif;
-  font-size: 2.25rem;
-  font-weight: 500;
-  color: #eaeaea;
-  text-transform: capitalize;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &::before {
-    content: "📊";
-    font-size: 2rem;
-  }
 `;
 
 const Grid = styled.div`
@@ -173,7 +157,7 @@ export default function AdminDashboard() {
 
   return (
     <Container>
-      <PageTitle>Dashboard</PageTitle>
+      <PageTitle icon="📊">Dashboard</PageTitle>
       <Grid>
         <Card>
           <StatTitle icon="👥">Samlet antal medlemmer</StatTitle>
