@@ -10,6 +10,7 @@ import TodayIcon from "@mui/icons-material/Today";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 export default function BottomNavbar() {
   const { token, setToken } = useContext(Store);
@@ -71,6 +72,14 @@ export default function BottomNavbar() {
             icon={<TodayIcon />}
             component={Link}
             to="/kalender"
+          />
+        )}
+        {token?.role === "instructor" && (
+          <BottomNavigationAction
+            label="Dashboard"
+            icon={<DashboardIcon />}
+            component={Link}
+            to="/dashboard"
           />
         )}
         {/* If you're logged in, show logout button vice versa */}

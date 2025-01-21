@@ -1,9 +1,9 @@
 export const activities = [
   {
     id: 1,
-    name: "Hip Hop Beginners",
+    name: "Hip Hop Begyndere",
     description:
-      "Learn the basics of hip hop dance in a fun and energetic environment. Perfect for those just starting their dance journey.",
+      "Lær de grundlæggende hip hop-bevægelser i et sjovt og energisk miljø. Perfekt for dem, der lige er begyndt at danse.",
     minAge: 8,
     maxAge: 16,
     weekday: "Mandag",
@@ -21,9 +21,9 @@ export const activities = [
   },
   {
     id: 2,
-    name: "Ballet Advanced",
+    name: "Ballet Øvede",
     description:
-      "Advanced ballet techniques and choreography for experienced dancers. Focus on perfecting form and artistic expression.",
+      "Avancerede balletteknikker og koreografi for erfarne dansere. Fokus på at perfektionere form og kunstnerisk udtryk.",
     minAge: 12,
     maxAge: 18,
     weekday: "Tirsdag",
@@ -40,9 +40,9 @@ export const activities = [
   },
   {
     id: 3,
-    name: "Modern Dance",
+    name: "Moderne Dans",
     description:
-      "Contemporary dance styles blending various techniques. Express yourself through fluid movements and creative choreography.",
+      "Moderne danseteknikker der blander forskellige stilarter. Udtryk dig gennem flydende bevægelser og kreativ koreografi.",
     minAge: 14,
     maxAge: 100,
     weekday: "Onsdag",
@@ -61,9 +61,9 @@ export const activities = [
   },
   {
     id: 4,
-    name: "Kids Dance",
+    name: "Børnedans",
     description:
-      "Fun and playful dance class for young children. Build coordination, rhythm, and confidence through movement.",
+      "Sjov og legende danseklasse for små børn. Opbyg koordination, rytme og selvtillid gennem bevægelse.",
     minAge: 4,
     maxAge: 7,
     weekday: "Torsdag",
@@ -81,7 +81,7 @@ export const activities = [
     id: 5,
     name: "Street Dance",
     description:
-      "Urban dance styles including breaking, popping, and locking. Learn the foundations of street dance culture.",
+      "Urbane dansestilarter inklusiv breaking, popping og locking. Lær grundlaget for street dance kulturen.",
     minAge: 10,
     maxAge: 16,
     weekday: "Fredag",

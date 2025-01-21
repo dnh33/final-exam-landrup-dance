@@ -13,6 +13,7 @@ import ClassDetails from "./views/ClassDetails";
 import BottomNavbar from "./components/navigation/BottomNavbar";
 import TeamDetails from "./views/TeamDetails";
 import PhoneShell from "./components/layout/PhoneShell";
+import AdminDashboard from "./views/AdminDashboard";
 import styled from "styled-components";
 
 const AppWrapper = styled.div`
@@ -60,6 +61,9 @@ function App() {
                 <Route path="/aktivitet/:id" element={<ClassDetails />} />
                 <Route path="/hold/:id" element={<TeamDetails />} />
                 <Route path="/kalender" element={<CalendarComponent />} />
+                {token?.role === "instructor" && (
+                  <Route path="/dashboard" element={<AdminDashboard />} />
+                )}
                 <Route path="*" element={<Navigate to="/login" replace />} />
               </Routes>
             </MainContent>

@@ -27,97 +27,144 @@ const PageTitle = styled.h1`
 `;
 
 const CalendarGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1rem 80px 1rem;
   max-width: 800px;
   margin: 0 auto;
-  padding-bottom: 80px;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
 `;
 
 const Card = styled(Link)`
   text-decoration: none;
-  background: rgba(94, 46, 83, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   position: relative;
-  aspect-ratio: 1;
 
   &:hover {
-    transform: translateY(-4px) scale(1.01);
+    transform: translateY(-4px);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
-    background: rgba(94, 46, 83, 1);
+    background: rgba(255, 255, 255, 1);
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: ${(props) => (props.isAtCapacity ? "#e74c3c" : "#2ecc71")};
   }
 `;
 
-const CardImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-
-  ${Card}:hover & {
-    opacity: 0.6;
-  }
-`;
-
-const CardOverlay = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+const CardContent = styled.div`
   padding: 1.5rem;
-  background: linear-gradient(
-    to top,
-    rgba(94, 46, 83, 0.95),
-    rgba(94, 46, 83, 0.8) 50%,
-    rgba(94, 46, 83, 0.4)
-  );
-  color: white;
 `;
 
-const CardTitle = styled.h2`
-  margin: 0 0 0.5rem 0;
+const CardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+`;
+
+const Title = styled.h2`
+  margin: 0;
   font-family: "Ubuntu", sans-serif;
   font-size: 1.5rem;
   font-weight: 500;
-  color: white;
+  color: #333;
+  flex: 1;
 `;
 
-const CardDetails = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-`;
-
-const Badge = styled.span`
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.875rem;
-  backdrop-filter: blur(4px);
-  color: white;
+const ParticipantCount = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
+  background: ${(props) =>
+    props.isAtCapacity ? "rgba(231, 76, 60, 0.1)" : "rgba(46, 204, 113, 0.1)"};
+  color: ${(props) => (props.isAtCapacity ? "#e74c3c" : "#27ae60")};
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.875rem;
 
   &::before {
-    content: "${(props) => props.icon}";
+    content: "👥";
   }
 `;
 
-const ParticipantCount = styled(Badge)`
-  background: ${(props) =>
-    props.isAtCapacity ? "rgba(231, 76, 60, 0.2)" : "rgba(46, 204, 113, 0.2)"};
-  color: white;
+const Details = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
+const TimeInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #5e2e53;
+  font-weight: 500;
+
+  &::before {
+    content: "⏰";
+  }
+`;
+
+const AgeRange = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.875rem;
+
+  &::before {
+    content: "👤";
+  }
+`;
+
+const Description = styled.p`
+  margin: 0.5rem 0 0;
+  color: #444;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+const ParticipantList = styled.div`
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.875rem;
+  color: #666;
+
+  ul {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.5rem;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::before {
+      content: "•";
+      color: #5e2e53;
+    }
+  }
 `;
 
 export default function InstructorCalendar() {
@@ -149,26 +196,33 @@ export default function InstructorCalendar() {
               to={`/aktivitet/${activity.id}`}
               isAtCapacity={isAtCapacity}
             >
-              <CardImage
-                src={activity.asset.url}
-                alt={activity.name}
-                loading="lazy"
-              />
-              <CardOverlay>
-                <CardTitle>{activity.name}</CardTitle>
-                <CardDetails>
-                  <Badge icon="👥">
+              <CardContent>
+                <CardHeader>
+                  <Title>{activity.name}</Title>
+                  <ParticipantCount isAtCapacity={isAtCapacity}>
+                    {participantCount}/{activity.maxParticipants}
+                  </ParticipantCount>
+                </CardHeader>
+                <Details>
+                  <TimeInfo>
+                    {activity.weekday} - {activity.time}
+                  </TimeInfo>
+                  <AgeRange>
                     {activity.maxAge === 100
                       ? `${activity.minAge}+ år`
                       : `${activity.minAge}-${activity.maxAge} år`}
-                  </Badge>
-                  <Badge icon="📅">{activity.weekday}</Badge>
-                  <Badge icon="⏰">{activity.time}</Badge>
-                  <ParticipantCount icon="👥" isAtCapacity={isAtCapacity}>
-                    {participantCount}/{activity.maxParticipants}
-                  </ParticipantCount>
-                </CardDetails>
-              </CardOverlay>
+                  </AgeRange>
+                  <Description>{activity.description}</Description>
+                </Details>
+                <ParticipantList>
+                  Deltagere:
+                  <ul>
+                    {activity.participants.map((participant) => (
+                      <li key={participant.id}>{participant.name}</li>
+                    ))}
+                  </ul>
+                </ParticipantList>
+              </CardContent>
             </Card>
           );
         })}
