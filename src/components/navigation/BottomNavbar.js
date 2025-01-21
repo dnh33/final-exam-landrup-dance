@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, navigate } from "@gatsbyjs/reach-router";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Store from "../../Store";
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
@@ -11,9 +11,11 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-export default function BottomNavbar({ context }) {
+export default function BottomNavbar() {
   const { token, setToken } = useContext(Store);
   const [value, setValue] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   function delete_cookie(name) {
     document.cookie =
@@ -26,7 +28,9 @@ export default function BottomNavbar({ context }) {
     navigate("/");
   }
 
-  return context.location.pathname === "/" ? null : (
+  if (location.pathname === "/") return null;
+
+  return (
     <Box sx={{ width: "100vw" }}>
       {/* Nav wrapper settings */}
       <BottomNavigation
@@ -37,7 +41,7 @@ export default function BottomNavbar({ context }) {
         }}
       >
         {/* If you are at home screen, show home button otherwise back button */}
-        {context.location.pathname === "/hjem" ? (
+        {location.pathname === "/hjem" ? (
           <BottomNavigationAction
             label="Hjem"
             icon={<HomeIcon />}
@@ -74,8 +78,6 @@ export default function BottomNavbar({ context }) {
           <BottomNavigationAction
             label="Log ud"
             icon={<LogoutIcon />}
-            component={Link}
-            to="/"
             onClick={logout}
             value={-10}
           />

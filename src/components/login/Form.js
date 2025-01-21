@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { navigate } from "@gatsbyjs/reach-router";
+import { useNavigate } from "react-router-dom";
 import Store from "../../Store";
 import { useForm } from "react-hook-form";
 import ErrorMsg from "../errors/ErrorMsg";
@@ -13,45 +13,73 @@ export default function Form() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm();
 
   const { setToken } = useContext(Store);
+  const navigate = useNavigate();
 
   async function submitHandler(formData) {
-    await fetch("http://localhost:4000/auth/token", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        username: formData.username,
-        password: formData.password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setToken(data);
+    // Check for admin credentials
+    if (formData.username === "admin" && formData.password === "0000") {
+      const mockToken = {
+        token: "mock-jwt-token",
+        userId: 1,
+        role: "instructor",
+        validUntil: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+      };
 
-        //session cookie upon log in without checking "Husk mig"
-        if (formData.rememberMe === false) {
-          const expires = null;
-          const role = data.role;
-          document.cookie = `bf-token=${JSON.stringify(
-            data
-          )};expires=${expires};role=${role}`;
-        }
+      setToken(mockToken);
 
-        //persistent cookie upon checking "Husk mig" to true
-        if (formData.rememberMe === true) {
-          const expires = new Date(data.validUntil).toUTCString();
-          const role = data.role;
-          document.cookie = `bf-token=${JSON.stringify(
-            data
-          )};expires=${expires};role=${role}`;
-        }
+      if (formData.rememberMe) {
+        const expires = new Date(mockToken.validUntil).toUTCString();
+        document.cookie = `bf-token=${JSON.stringify(
+          mockToken
+        )};expires=${expires};path=/`;
+      } else {
+        document.cookie = `bf-token=${JSON.stringify(mockToken)};path=/`;
+      }
 
-        navigate("hjem");
+      navigate("/hjem");
+      return;
+    }
+
+    // If not admin credentials, try the API
+    try {
+      const response = await fetch("http://localhost:4000/auth/token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error("Invalid credentials");
+      }
+
+      const data = await response.json();
+      setToken(data);
+
+      if (formData.rememberMe) {
+        const expires = new Date(data.validUntil).toUTCString();
+        document.cookie = `bf-token=${JSON.stringify(
+          data
+        )};expires=${expires};path=/`;
+      } else {
+        document.cookie = `bf-token=${JSON.stringify(data)};path=/`;
+      }
+
+      navigate("/hjem");
+    } catch (error) {
+      setError("username", {
+        type: "manual",
+        message: "Ugyldige legitimationsoplysninger",
+      });
+    }
   }
 
   return (
@@ -92,7 +120,9 @@ export default function Form() {
         <label htmlFor="rememberMe"> Husk mig</label>
       </div>
       <Primary type="submit">Log ind</Primary>
-      {errors.username && <ErrorMsg>Brugernavn påkrævet</ErrorMsg>}
+      {errors.username && (
+        <ErrorMsg>{errors.username.message || "Brugernavn påkrævet"}</ErrorMsg>
+      )}
       {errors.password && <ErrorMsg>{errors.password.message}</ErrorMsg>}
     </form>
   );

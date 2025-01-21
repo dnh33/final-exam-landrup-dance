@@ -1,104 +1,129 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Link } from "@gatsbyjs/reach-router";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import List from "@mui/material/List";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
+import { activities } from "../../data/mockData";
 
-import "./ActivityCard.scss";
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 0.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const Card = styled(Link)`
+  text-decoration: none;
+  background: rgba(94, 46, 83, 0.95);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  aspect-ratio: 1;
+
+  &:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(94, 46, 83, 1);
+  }
+`;
+
+const CardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+
+  ${Card}:hover & {
+    opacity: 0.6;
+  }
+`;
+
+const CardOverlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(
+    to top,
+    rgba(94, 46, 83, 0.95),
+    rgba(94, 46, 83, 0.8) 50%,
+    rgba(94, 46, 83, 0.4)
+  );
+  color: white;
+`;
+
+const CardTitle = styled.h2`
+  margin: 0 0 0.5rem 0;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: white;
+`;
+
+const CardDetails = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+const Badge = styled.span`
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  backdrop-filter: blur(4px);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: "${(props) => props.icon}";
+  }
+`;
 
 export default function ActivityCard() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    async function getActivity() {
-      const response = await axios.get(
-        "http://localhost:4000/api/v1/activities"
-      );
-      setData(response.data);
-    }
-    getActivity();
+    // Use mock data instead of API call
+    setData(activities);
   }, []);
 
-  if (!data) return "";
+  if (!data) return null;
 
   return (
-    <List
-      className="activity__list"
-      sx={{
-        width: "100%",
-        maxWidth: 356,
-        bgcolor: "#5E2E53",
-        overflow: "auto",
-        margin: "0 auto",
-        maxHeight: "80vh",
-        "& ul": { padding: 0 },
-      }}
-    >
-      {data?.map((activity) => {
-        return (
-          <Link
-            key={activity.id}
-            to={`/aktivitet/${activity.id}`}
-            style={{ textDecoration: "none" }}
-          >
-            <Card className="activity__card">
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt={activity.description}
-                  height="344"
-                  width="356"
-                  image={activity.asset.url}
-                  title={activity.name}
-                  aria-label={activity.description}
-                />
-                <CardInfo>
-                  <BoxPos>
-                    <CardTitle>{activity.name}</CardTitle>
-                    {/* If max age is 100, show minimum age only. Otherise show age range, min to max */}
-                    {activity.maxAge === 100 ? (
-                      <CardTitle>{activity.minAge}+ år</CardTitle>
-                    ) : (
-                      <CardTitle>
-                        {activity.minAge}-{activity.maxAge} år
-                      </CardTitle>
-                    )}
-                  </BoxPos>
-                </CardInfo>
-              </CardActionArea>
-            </Card>
-          </Link>
-        );
-      })}
-    </List>
+    <CardGrid>
+      {data.map((activity) => (
+        <Card key={activity.id} to={`/aktivitet/${activity.id}`}>
+          <CardImage
+            src={activity.asset.url}
+            alt={activity.name}
+            loading="lazy"
+          />
+          <CardOverlay>
+            <CardTitle>{activity.name}</CardTitle>
+            <CardDetails>
+              <Badge icon="👥">
+                {activity.maxAge === 100
+                  ? `${activity.minAge}+ år`
+                  : `${activity.minAge}-${activity.maxAge} år`}
+              </Badge>
+              <Badge icon="📅">{activity.weekday}</Badge>
+              <Badge icon="⏰">{activity.time}</Badge>
+            </CardDetails>
+          </CardOverlay>
+        </Card>
+      ))}
+    </CardGrid>
   );
 }
-
-const BoxPos = styled.div`
-  margin-top: 1.5rem;
-  margin-left: 1.5625rem;
-`;
-
-const CardInfo = styled.div`
-  width: 100vw;
-  height: 96px;
-  background: rgba(225, 161, 233, 0.8);
-  border-radius: 0px 39px;
-  z-index: 0;
-  position: absolute;
-  bottom: 0;
-`;
-
-const CardTitle = styled.h2`
-  width: 182px;
-  font-family: Ubuntu;
-  font-style: normal;
-  font-size: 1.125rem;
-  font-weight: 500;
-  line-height: 21px;
-  margin-bottom: -10px;
-  color: #000000;
-`;

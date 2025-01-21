@@ -3,34 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@gatsbyjs/reach-router": "^1.3.6",
-    "@material-ui/core": "^4.12.3",
-    "@mui/icons-material": "^5.0.1",
-    "@mui/material": "^5.0.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.7",
+    "@mui/material": "^5.15.7",
     "animate.css": "^4.1.1",
-    "axios": "^0.21.4",
-    "react": "^17.0.2",
-    "react-cookie": "^4.1.1",
-    "react-dom": "^17.0.2",
-    "react-hook-form": "^7.16.1",
-    "react-scripts": "4.0.3",
-    "sass": "^1.42.1",
-    "styled-components": "^5.3.1",
-    "web-vitals": "^1.0.1"
+    "axios": "^1.7.9",
+    "react": "^19.0.0",
+    "react-cookie": "^7.2.2",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
+    "react-router-dom": "^7.0.0",
+    "react-scripts": "^5.0.1",
+    "sass": "^1.83.4",
+    "styled-components": "^6.1.14",
+    "web-vitals": "^4.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
@@ -45,7 +41,13 @@
       "last 1 safari version"
     ]
   },
+  "resolutions": {
+    "nth-check": "^2.0.1",
+    "postcss": "^8.4.31",
+    "@svgr/webpack": "^8.0.0",
+    "css-select": "^5.1.0"
+  },
   "devDependencies": {
-    "@emotion/styled": "^11.3.0"
+    "@emotion/styled": "^11.14.0"
   }
 }

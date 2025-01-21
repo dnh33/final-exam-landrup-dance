@@ -1,150 +1,266 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "@gatsbyjs/reach-router";
+import { useParams } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import styled from "styled-components";
-import SignUp from "../components/buttons/SignUp";
+import { activities } from "../data/mockData";
+
+const Container = styled.div`
+  min-height: 100vh;
+  background: linear-gradient(135deg, #5e2e53 0%, #482640 100%);
+  display: flex;
+  flex-direction: column;
+`;
+
+const ImageHeader = styled.div`
+  position: relative;
+  height: 50vh;
+  background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.2),
+      rgba(94, 46, 83, 0.95)
+    ),
+    url(${(props) => props.background});
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  @media (max-width: 480px) {
+    height: 40vh;
+  }
+`;
+
+const Content = styled.div`
+  flex: 1;
+  padding: 24px;
+  background: transparent;
+  color: white;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+`;
+
+const Title = styled.h1`
+  margin: 0;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+`;
+
+const MetaInfo = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+`;
+
+const Badge = styled.span`
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+
+  &::before {
+    content: "${(props) => props.icon}";
+  }
+`;
+
+const Description = styled.p`
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin: 24px 0;
+  color: rgba(255, 255, 255, 0.9);
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    margin: 16px 0;
+  }
+`;
+
+const Section = styled.div`
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 24px 0;
+  backdrop-filter: blur(10px);
+`;
+
+const SectionTitle = styled.h3`
+  margin: 0 0 16px 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: "${(props) => props.icon}";
+  }
+`;
+
+const DetailGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+`;
+
+const DetailItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+
+  &::before {
+    content: "${(props) => props.icon}";
+  }
+`;
+
+const ParticipantList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const ParticipantCard = styled.div`
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::before {
+    content: "👤";
+  }
+`;
+
+const ActionButton = styled.button`
+  background: #ffffff;
+  color: #5e2e53;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: #f8f8f8;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &::before {
+    content: "✨";
+  }
+`;
+
+const ParticipantCount = styled(Badge)`
+  background: ${(props) =>
+    props.isAtCapacity ? "rgba(231, 76, 60, 0.2)" : "rgba(46, 204, 113, 0.2)"};
+  color: ${(props) => (props.isAtCapacity ? "#e74c3c" : "#2ecc71")};
+`;
 
 export default function ClassDetails() {
   const [data, setData] = useState(null);
-  const [signUp, setSignUp] = useState(false);
   const [cookies] = useCookies(["bf-token"]);
-
-  // route: /class/:id
   const { id } = useParams();
 
-  const client = axios.create({
-    baseURL: `http://localhost:4000/api/v1/activities/${id}`,
-  });
-
   useEffect(() => {
-    async function getCourse() {
-      const response = await client.get("");
-      setData(response.data);
-    }
-    getCourse();
-  }, []);
+    const activity = activities.find((a) => a.id === parseInt(id));
+    setData(activity);
+  }, [id]);
 
-  if (!data) return "";
+  if (!data) return null;
+
+  const isAdmin = cookies["bf-token"]?.role === "instructor";
+  const participantCount = data.participants.length;
+  const isAtCapacity = participantCount >= data.maxParticipants;
+
   return (
-    <BG background={data.asset.url}>
-      <Wrapper>
-        <Box1>
-          {/* If you don't have a user cookie, hide button */}
-          {!cookies["bf-token"] ? null : (
-            <BtnPos>
-              {/* Don't show the sign up button if you're an instructor */}
-              {cookies["bf-token"]?.role === "instructor" ? null : (
-                <SignUp classId={data.id} />
-              )}
-            </BtnPos>
+    <Container>
+      <ImageHeader background={data.asset.url}>
+        <Title>{data.name}</Title>
+        <MetaInfo>
+          <Badge icon="👥">
+            {data.maxAge === 100
+              ? `${data.minAge}+ år`
+              : `${data.minAge}-${data.maxAge} år`}
+          </Badge>
+          <Badge icon="📅">{data.weekday}</Badge>
+          <Badge icon="⏰">{data.time}</Badge>
+          {isAdmin && (
+            <ParticipantCount icon="👥" isAtCapacity={isAtCapacity}>
+              {participantCount}/{data.maxParticipants} deltagere
+            </ParticipantCount>
           )}
-        </Box1>
+        </MetaInfo>
+      </ImageHeader>
 
-        <Box2>
-          <ClassTitle>{data.name}</ClassTitle>
-          {/* If max age is 100, show minimum age only. Otherise show age range, min to max */}
-          {data.maxAge === 100 ? (
-            <CardAge>{data.minAge}+ år</CardAge>
-          ) : (
-            <CardAge>
-              {data.minAge} -{data.maxAge} år
-            </CardAge>
-          )}
+      <Content>
+        <Description>{data.description}</Description>
 
-          <ClassDesc>{data.description}</ClassDesc>
-        </Box2>
-      </Wrapper>
-    </BG>
+        <Section>
+          <SectionTitle icon="📋">Holddetaljer</SectionTitle>
+          <DetailGrid>
+            <DetailItem icon="📅">{data.weekday}</DetailItem>
+            <DetailItem icon="⏰">{data.time}</DetailItem>
+            <DetailItem icon="👥">
+              {data.maxAge === 100
+                ? `${data.minAge}+ år`
+                : `${data.minAge}-${data.maxAge} år`}
+            </DetailItem>
+            {isAdmin && (
+              <DetailItem icon="🎯">
+                {data.maxParticipants} max deltagere
+              </DetailItem>
+            )}
+          </DetailGrid>
+        </Section>
+
+        {isAdmin && (
+          <Section>
+            <SectionTitle icon="👥">Deltagerliste</SectionTitle>
+            <ParticipantList>
+              {data.participants.map((participant) => (
+                <ParticipantCard key={participant.id}>
+                  {participant.name}
+                </ParticipantCard>
+              ))}
+            </ParticipantList>
+          </Section>
+        )}
+
+        {cookies["bf-token"] && !isAdmin && (
+          <ActionButton>Tilmeld Hold</ActionButton>
+        )}
+      </Content>
+    </Container>
   );
 }
-
-// Content //
-const ClassTitle = styled.p`
-  width: 18.75rem;
-  height: 1.75rem;
-  margin-top: 1rem;
-  margin-bottom: 0;
-  font-family: Ubuntu;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 1.5rem;
-  line-height: 1.75rem;
-  color: #ffffff;
-`;
-const CardAge = styled.p`
-  width: 6.25rem;
-  height: 1.3125rem;
-  margin: 0;
-
-  font-family: Ubuntu;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 1.125rem;
-  line-height: 1.3125rem;
-  /* identical to box height */
-  color: #ffffff;
-`;
-const ClassDesc = styled.p`
-  width: 22.125rem;
-  height: 11.9375rem;
-
-  font-family: Ubuntu;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 1.125rem;
-  line-height: 1.3125rem;
-  text-align: left;
-  color: #ffffff;
-  margin-top: 0.875rem;
-  margin-bottom: 5rem;
-`;
-/////////////////
-
-// Wrappers //
-const Box1 = styled.div`
-  grid-area: top;
-  max-width: 100%;
-  height: 30.5625rem;
-  position: relative;
-`;
-const Box2 = styled.div`
-  grid-area: bottom;
-  padding-left: 1.75rem;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: #5e2e53;
-`;
-const BG = styled.div`
-  max-width: 100vw;
-  max-height: 100vh;
-
-  grid-area: top;
-  object-fit: fill;
-  background-image: url(${(props) => props.background});
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: 100% 30.5625rem;
-`;
-const Wrapper = styled.section`
-  height: 100vh;
-  overflow: hidden;
-
-  display: grid;
-  grid-template-rows: 30.5625rem 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    "top"
-    "bottom";
-`;
-////////////////
-
-// Positioning //
-const BtnPos = styled.span`
-  margin-right: 1rem;
-  position: absolute;
-  right: 0;
-  bottom: 1.5rem;
-`;
-/////////////////
