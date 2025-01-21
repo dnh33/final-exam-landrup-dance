@@ -65,21 +65,19 @@ const Title = styled.h2`
   flex: 1;
 `;
 
-const ParticipantCount = styled.div`
+const ParticipantCount = styled.div.attrs((props) => ({
+  "data-at-capacity": props.isAtCapacity,
+}))`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: ${(props) =>
-    props.isAtCapacity ? "rgba(231, 76, 60, 0.1)" : "rgba(46, 204, 113, 0.1)"};
-  color: ${(props) => (props.isAtCapacity ? "#e74c3c" : "#27ae60")};
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 12px;
   font-size: 0.875rem;
-
-  &::before {
-    content: "👥";
-  }
+  font-weight: 500;
+  background: ${(props) => (props.$isAtCapacity ? "#e74c3c" : "#2ecc71")};
+  color: #ffffff;
+  opacity: 0.95;
 `;
 
 const Details = styled.div`
@@ -183,7 +181,7 @@ export default function InstructorCalendar() {
               <CardContent>
                 <CardHeader>
                   <Title>{activity.name}</Title>
-                  <ParticipantCount isAtCapacity={isAtCapacity}>
+                  <ParticipantCount $isAtCapacity={isAtCapacity}>
                     {participantCount}/{activity.maxParticipants}
                   </ParticipantCount>
                 </CardHeader>

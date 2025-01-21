@@ -181,10 +181,23 @@ const ActionButton = styled.button`
   }
 `;
 
-const ParticipantCount = styled(Badge)`
+const ParticipantCount = styled.div.attrs((props) => ({
+  "data-at-capacity": props.isAtCapacity,
+}))`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
   background: ${(props) =>
-    props.isAtCapacity ? "rgba(231, 76, 60, 0.2)" : "rgba(46, 204, 113, 0.2)"};
-  color: ${(props) => (props.isAtCapacity ? "#e74c3c" : "#2ecc71")};
+    props.$isAtCapacity ? "rgba(231, 76, 60, 0.2)" : "rgba(46, 204, 113, 0.2)"};
+  color: ${(props) => (props.$isAtCapacity ? "#e74c3c" : "#2ecc71")};
+
+  &::before {
+    content: "👥";
+  }
 `;
 
 export default function ClassDetails() {
@@ -216,7 +229,7 @@ export default function ClassDetails() {
           <Badge icon="📅">{data.weekday}</Badge>
           <Badge icon="⏰">{data.time}</Badge>
           {isAdmin && (
-            <ParticipantCount icon="👥" isAtCapacity={isAtCapacity}>
+            <ParticipantCount $isAtCapacity={isAtCapacity}>
               {participantCount}/{data.maxParticipants} deltagere
             </ParticipantCount>
           )}
